@@ -1,0 +1,33 @@
+header,
+.player-display {
+  display: flex;
+  width: auto;
+  height: min-content;
+  align-items: center;
+  justify-content: center;
+}
+
+.grid {
+  display: grid;
+  aspect-ratio: 1;
+  max-width: 500px;
+  margin: auto;
+  grid-template-rows: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 1fr);
+  border: 6px solid darkgray;
+  background-color: #eee;
+  border-radius: 8px;
+  overflow: clip;
+}
+
+.tile {
+  border: 2px solid gray;
+  min-width: 4rem;
+  min-height: 4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3rem;
+  font-weight: 900;
+  cursor: pointer;
+}
