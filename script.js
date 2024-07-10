@@ -1,5 +1,34 @@
 ////////////////////////////////////////////
-///// board
+///// players
+///////////////////////////////////////////
+const setPlayers = (() => {
+  const start = document.getElementById('start');
+  const startScreen = document.getElementById('start-screen');
+  const gameScreen = document.getElementById('game-screen');
+
+  const createPlayer = (name, marker) => {
+    return { name, marker };
+  };
+
+  let players = [];
+
+  start.addEventListener('click', (e) => {
+    e.preventDefault(); //prevent form submission page reload
+    const player1name = document.getElementById('player-one').value;
+    const player2name = document.getElementById('player-two').value;
+    const player1 = createPlayer(player1name, 'X');
+    const player2 = createPlayer(player2name, 'O');
+    players.push(player1, player2);
+    console.log('Players initialized:', players);
+    gameController.setPlayers(players); // Set players in gameController
+    gameboard.drawBoard();
+    startScreen.style.display = 'none';
+    gameScreen.style.display = 'block';
+  });
+})();
+
+////////////////////////////////////////////
+///// gameboard
 ///////////////////////////////////////////
 
 const gameboard = (() => {
@@ -19,6 +48,7 @@ const gameboard = (() => {
     });
   };
 
+  console.log('drew board');
   return {
     board,
     grid,
@@ -33,10 +63,11 @@ const gameboard = (() => {
 const gameController = (() => {
   //declare variables used to track game state
 
+  let players = [];
   //isGameActive to pause game in case of end scenario
   let isGameActive = true;
   //store current player to know who's turn it is
-  let currentPlayer = 'X';
+  let currentPlayer = null;
 
   const playerDisplay = document.querySelector('.player-display');
 
@@ -44,12 +75,7 @@ const gameController = (() => {
   const board = gameboard.board;
 
   //validate legal move
-  const isValidPlay = (tile) => {
-    if (tile.innerText === 'X' || tile.innerText === 'O') {
-      return false;
-    }
-    return true;
-  };
+  const isValidPlay = (tile) => (tile.innerText === '' ? true : false);
 
   /*
    board indexes:
@@ -75,7 +101,6 @@ const gameController = (() => {
 
     for (let i = 0; i < length; i++) {
       const combo = winningCombos[i];
-      console.log(combo);
       const a = board[combo[0]];
       const b = board[combo[1]];
       const c = board[combo[2]];
@@ -98,40 +123,61 @@ const gameController = (() => {
 
     if (!board.includes('')) {
       console.log('tie');
+      isGameActive = false;
     }
   };
 
   //handle player change
   const changePlayer = () => {
-    playerDisplay.classList.remove(`player${currentPlayer}`);
-    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-    playerDisplay.innerText = currentPlayer;
-    playerDisplay.classList.add(`player${currentPlayer}`);
+    playerDisplay.classList.remove(`player${currentPlayer.marker}`);
+    currentPlayer = currentPlayer === players[0] ? players[1] : players[0];
+    console.log(`current player: ${currentPlayer.name}`);
+    playerDisplay.innerText = `${currentPlayer.name}'s turn to play ${currentPlayer.marker}`;
+    playerDisplay.classList.add(`player${currentPlayer.marker}`);
   };
 
   //handle player turn
   const playTurn = (e) => {
-    const tile = e.target;
-    if (isValidPlay(tile)) {
-      e.target.innerText = currentPlayer;
-      board[e.target.dataset.tileId] = currentPlayer;
-      changePlayer();
+    if (isGameActive) {
+      const tile = e.target;
+      if (isValidPlay(tile)) {
+        e.target.innerText = currentPlayer.marker;
+        board[e.target.dataset.tileId] = currentPlayer.marker;
+        changePlayer();
+      }
+      evaluateGame();
     }
-    evaluateGame();
   };
 
+  const resetGame = () => {
+    gameboard.board = ['', '', '', '', '', '', '', '', ''];
+    gameboard.grid.innerHTML = '';
+    gameboard.drawBoard();
+    isGameActive = true;
+    currentPlayer = players[0];
+    playerDisplay.innerText = `${currentPlayer.name}'s turn to play ${currentPlayer.marker}`;
+    playerDisplay.classList.add(`player${currentPlayer.marker}`);
+  };
+
+  const setPlayers = (newPlayers) => {
+    players = newPlayers;
+    currentPlayer = players[0];
+    console.log('Current player set:', currentPlayer);
+    playerDisplay.innerText = `${currentPlayer.name}'s turn to play ${currentPlayer.marker}`;
+    playerDisplay.classList.add(`player${currentPlayer.marker}`);
+  };
+
+  console.log('set gameController');
   return {
-    currentPlayer,
     isGameActive,
     playTurn,
     evaluateGame,
+    resetGame,
+    setPlayers,
   };
 })();
 
-const playerFactory = (name, player) => {
-  return { name, player };
-};
-
-const player1 = playerFactory('dude', true);
-
-gameboard.drawBoard();
+const resetButton = document.getElementById('reset');
+resetButton.addEventListener('click', () => {
+  gameController.resetGame();
+});
