@@ -16,8 +16,8 @@ const setPlayers = (() => {
     e.preventDefault(); //prevent form submission page reload
     const player1name = document.getElementById('player-one').value;
     const player2name = document.getElementById('player-two').value;
-    const player1 = createPlayer(player1name, 'X');
-    const player2 = createPlayer(player2name, 'O');
+    const player1 = createPlayer(player1name || 'Player 1', 'X');
+    const player2 = createPlayer(player2name || 'Player 2', 'O');
     players.push(player1, player2);
     console.log('Players initialized:', players);
     gameController.setPlayers(players); // Set players in gameController
