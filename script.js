@@ -36,6 +36,7 @@ const gameboard = (() => {
   let board = ['', '', '', '', '', '', '', '', ''];
 
   const drawBoard = () => {
+    grid.innerHTML = ''; // Clear the grid before drawing
     board.forEach((item, index) => {
       const tile = document.createElement('div');
       tile.classList.add('tile');
@@ -48,11 +49,19 @@ const gameboard = (() => {
     });
   };
 
+  const resetBoard = () => {
+    // modify original board array in place
+    for (let i = 0; i < board.length; i++) {
+      board[i] = '';
+    }
+  };
+
   console.log('drew board');
   return {
     board,
     grid,
     drawBoard,
+    resetBoard,
   };
 })();
 
@@ -68,15 +77,13 @@ const gameController = (() => {
   let isGameActive = true;
   //store current player to know who's turn it is
   let currentPlayer = null;
+  //validate legal move
+  const isValidPlay = (tile) => (tile.innerText === '' ? true : false);
 
   const playerDisplay = document.querySelector('.player-display');
 
   //access the board array
   const board = gameboard.board;
-
-  //validate legal move
-  const isValidPlay = (tile) => (tile.innerText === '' ? true : false);
-
   /*
    board indexes:
    [0] [1] [2]
@@ -104,11 +111,11 @@ const gameController = (() => {
       const a = board[combo[0]];
       const b = board[combo[1]];
       const c = board[combo[2]];
+      console.log(`Evaluating combo: ${combo}, values: ${a}, ${b}, ${c}`);
 
       if (a === '' || b === '' || c === '') {
         continue;
       }
-
       if (a === b && b === c) {
         gameWon = true;
         break;
@@ -125,6 +132,15 @@ const gameController = (() => {
       console.log('tie');
       isGameActive = false;
     }
+  };
+
+  //get players
+  const setPlayers = (newPlayers) => {
+    players = newPlayers;
+    currentPlayer = players[0];
+    console.log('Current player set:', currentPlayer);
+    playerDisplay.innerText = `${currentPlayer.name}'s turn to play ${currentPlayer.marker}`;
+    playerDisplay.classList.add(`player${currentPlayer.marker}`);
   };
 
   //handle player change
@@ -149,25 +165,23 @@ const gameController = (() => {
     }
   };
 
+  //game reset
+  const resetButton = document.getElementById('reset');
+  resetButton.addEventListener('click', () => {
+    gameController.resetGame();
+  });
+
   const resetGame = () => {
-    gameboard.board = ['', '', '', '', '', '', '', '', ''];
-    gameboard.grid.innerHTML = '';
+    gameboard.resetBoard(); // Reset the board array
+    // gameboard.board = ['', '', '', '', '', '', '', '', ''];//creates new array instead of reset!!!
     gameboard.drawBoard();
     isGameActive = true;
     currentPlayer = players[0];
     playerDisplay.innerText = `${currentPlayer.name}'s turn to play ${currentPlayer.marker}`;
     playerDisplay.classList.add(`player${currentPlayer.marker}`);
+    console.log('Game reset. Current board:', gameboard.board);
   };
 
-  const setPlayers = (newPlayers) => {
-    players = newPlayers;
-    currentPlayer = players[0];
-    console.log('Current player set:', currentPlayer);
-    playerDisplay.innerText = `${currentPlayer.name}'s turn to play ${currentPlayer.marker}`;
-    playerDisplay.classList.add(`player${currentPlayer.marker}`);
-  };
-
-  console.log('set gameController');
   return {
     isGameActive,
     playTurn,
@@ -176,8 +190,3 @@ const gameController = (() => {
     setPlayers,
   };
 })();
-
-const resetButton = document.getElementById('reset');
-resetButton.addEventListener('click', () => {
-  gameController.resetGame();
-});
