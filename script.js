@@ -19,7 +19,6 @@ const setPlayers = (() => {
     const player1 = createPlayer(player1name || 'Player 1', 'X');
     const player2 = createPlayer(player2name || 'Player 2', 'O');
     players.push(player1, player2);
-    console.log('Players initialized:', players);
     gameController.setPlayers(players); // Set players in gameController
     gameboard.drawBoard();
     startScreen.style.display = 'none';
@@ -56,7 +55,6 @@ const gameboard = (() => {
     }
   };
 
-  console.log('drew board');
   return {
     board,
     grid,
@@ -111,7 +109,7 @@ const gameController = (() => {
       const a = board[combo[0]];
       const b = board[combo[1]];
       const c = board[combo[2]];
-      console.log(`Evaluating combo: ${combo}, values: ${a}, ${b}, ${c}`);
+      // console.log(`Evaluating combo: ${combo}, values: ${a}, ${b}, ${c}`);
 
       if (a === '' || b === '' || c === '') {
         continue;
@@ -123,33 +121,36 @@ const gameController = (() => {
     }
 
     if (gameWon) {
-      console.log('game won');
+      playerDisplay.innerText = `${currentPlayer.name} wins the game!`;
+      resetButton.innerText = 'Play Again';
       isGameActive = false;
       return;
     }
 
     if (!board.includes('')) {
-      console.log('tie');
+      playerDisplay.innerText = "It's a tie...";
+      resetButton.innerText = 'Play Again';
       isGameActive = false;
     }
+    changePlayer();
   };
 
   //get players
   const setPlayers = (newPlayers) => {
     players = newPlayers;
     currentPlayer = players[0];
-    console.log('Current player set:', currentPlayer);
     playerDisplay.innerText = `${currentPlayer.name}'s turn to play ${currentPlayer.marker}`;
     playerDisplay.classList.add(`player${currentPlayer.marker}`);
   };
 
   //handle player change
   const changePlayer = () => {
-    playerDisplay.classList.remove(`player${currentPlayer.marker}`);
-    currentPlayer = currentPlayer === players[0] ? players[1] : players[0];
-    console.log(`current player: ${currentPlayer.name}`);
-    playerDisplay.innerText = `${currentPlayer.name}'s turn to play ${currentPlayer.marker}`;
-    playerDisplay.classList.add(`player${currentPlayer.marker}`);
+    if (isGameActive) {
+      playerDisplay.classList.remove(`player${currentPlayer.marker}`);
+      currentPlayer = currentPlayer === players[0] ? players[1] : players[0];
+      playerDisplay.innerText = `${currentPlayer.name}'s turn to play ${currentPlayer.marker}`;
+      playerDisplay.classList.add(`player${currentPlayer.marker}`);
+    }
   };
 
   //handle player turn
@@ -159,7 +160,7 @@ const gameController = (() => {
       if (isValidPlay(tile)) {
         e.target.innerText = currentPlayer.marker;
         board[e.target.dataset.tileId] = currentPlayer.marker;
-        changePlayer();
+        resetButton.disabled = false;
       }
       evaluateGame();
     }
@@ -179,7 +180,9 @@ const gameController = (() => {
     currentPlayer = players[0];
     playerDisplay.innerText = `${currentPlayer.name}'s turn to play ${currentPlayer.marker}`;
     playerDisplay.classList.add(`player${currentPlayer.marker}`);
-    console.log('Game reset. Current board:', gameboard.board);
+    resetButton.innerText = 'Restart';
+    resetButton.disabled = true;
+    // console.log('Game reset. Current board:', gameboard.board);
   };
 
   return {
