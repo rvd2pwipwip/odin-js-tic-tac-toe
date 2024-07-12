@@ -5,6 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp">
   <script src="script.js" defer></script>
   <title>Tic Tac Toe</title>
 </head>
@@ -35,12 +36,11 @@
 
   <!-- The Game -->
   <div id="game-screen" style="display: none">
-    <header>Tic Tac Toe</header>
+    
+    <header><button id="back"><i class="material-icons">arrow_back_ios</i></button>Tic Tac Toe</header>
     <div class="player-display">Player</div>
     <div class="grid"></div>
-    <footer>
-      <button id="reset" disabled>Restart</button>
-    </footer>
+    <button id="reset" disabled><i class="material-icons">replay</i>Restart</button>
   </div>
 </body>
 </html>

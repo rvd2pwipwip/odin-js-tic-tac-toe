@@ -22,7 +22,7 @@ const setPlayers = (() => {
     gameController.setPlayers(players); // Set players in gameController
     gameboard.drawBoard();
     startScreen.style.display = 'none';
-    gameScreen.style.display = 'block';
+    gameScreen.style.display = 'flex';
   });
 })();
 
@@ -185,11 +185,22 @@ const gameController = (() => {
     // console.log('Game reset. Current board:', gameboard.board);
   };
 
+  //game reload
+  const reloadButton = document.getElementById('back');
+  reloadButton.addEventListener('click', () => {
+    gameController.reloadGame();
+  });
+
+  const reloadGame = () => {
+    location.reload();
+  };
+
   return {
     isGameActive,
+    setPlayers,
     playTurn,
     evaluateGame,
     resetGame,
-    setPlayers,
+    reloadGame,
   };
 })();

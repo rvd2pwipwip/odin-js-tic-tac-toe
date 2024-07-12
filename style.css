@@ -1,16 +1,118 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, dialog, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+*, *::after, *::before {
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  flex-direction: column;
+  background: #fafafa;
+  gap: 20px;
+}
+
+/*********************************************************/
+/* Start Screen */
+/*********************************************************/
+
+#start-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.25rem;
+  gap: 0.625rem;
+  background: #FFFFFF;
+  border: 2px solid #C2C2C2;
+  border-radius: 20px;
+  color: #777;
+}
+
+/*********************************************************/
+/* Game Board */
+/*********************************************************/
+
 header,
 .player-display {
   display: flex;
-  width: auto;
+  width: 100%;
   height: min-content;
   align-items: center;
   justify-content: center;
 }
 
+#back {
+  position: absolute;
+  top: -5px;
+  left: 0px;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background: none;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+#game-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center children horizontally */
+}
+
 .grid {
   display: grid;
   aspect-ratio: 1;
-  max-width: 500px;
+  min-width: 300px;
   margin: auto;
   grid-template-rows: repeat(3, 1fr);
   grid-template-columns: repeat(3, 1fr);
@@ -21,7 +123,7 @@ header,
 }
 
 .tile {
-  border: 2px solid gray;
+  border: 2px solid darkgray;
   min-width: 4rem;
   min-height: 4rem;
   display: flex;
@@ -30,4 +132,29 @@ header,
   font-size: 3rem;
   font-weight: 900;
   cursor: pointer;
+}
+
+/*********************************************************/
+/* CTA */
+/*********************************************************/
+
+#reset {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* width: 100%; */
+  height: 50px;
+  background: none;
+  color: #777;
+  padding: 0 1.25rem;
+  border: 2px solid #777;
+  border-radius: 50px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  gap: 0.5rem;
+  margin-top: 1rem; /* Add some space above the button */
+}
+
+header {
+  position: relative;
 }
